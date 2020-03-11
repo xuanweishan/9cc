@@ -35,6 +35,23 @@ void error(char *fmt, ...){
 	exit(1);
 }
 
+// 輸入程式
+char *user_input;
+
+//回報錯誤的位置
+void error_at(char *loc, char *fmt, ...){
+	va_list ap;
+	va_start(ap, fmt);
+
+	int pos = loc - user_input;
+	fprintf(stderr, "%s\n", user_input);
+	fprintf(stderr, "%*s", pos, "");//輸出pos個空白
+	fprintf(stderr, "^ ");
+	vfprintf(stderr, fmt, ap);
+	fprintf(stderr, "\n");
+	exit(1);
+}
+
 //下一個標記為符合預期的符號時，讀入一個標記並往下繼續
 //回傳true，否則回傳false
 bool consume(char op){
@@ -48,7 +65,7 @@ bool consume(char op){
 //否則警告為錯誤
 void expect(char op){
 	if(token->kind != TK_RESERVED || token->str[0] != op)
-		error("不是'%c'",op);
+		error_at(token->str,"不是'%c'",op);
 	token = token->next;
 }
 
@@ -56,7 +73,7 @@ void expect(char op){
 //否則警告為錯誤
 int expect_number(){
 	if(token->kind != TK_NUM)
-		error("不是數值");
+		error_at(token->str, "不是數值");
 	int val = token->val;
 	token = token->next;
 	return val;
@@ -99,7 +116,7 @@ Token *tokenize(char *p){
 			continue;
 		}
 
-		error("標記解析失敗");
+		error_at(token->str,"標記解析失敗");
 	}
 
 	new_token(TK_EOF, cur, p);
@@ -111,6 +128,8 @@ int main(int argc, char **argv){
 		fprintf(stderr, "引用數數量錯誤");
 		return 1;
 	}
+
+	user_input = argv[1];
 
 	//標記解析
 	token = tokenize(argv[1]);
