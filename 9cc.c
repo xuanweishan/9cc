@@ -116,7 +116,7 @@ Token *tokenize(char *p){
 			continue;
 		}
 
-		error_at(token->str,"標記解析失敗");
+		error("標記解析失敗");
 	}
 
 	new_token(TK_EOF, cur, p);
