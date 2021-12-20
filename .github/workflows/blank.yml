@@ -31,7 +31,7 @@ jobs:
           lspci | grep VGA
       - name: Check out library needed installed or not
         run: |
-          h5ls -h
+          #h5ls -h
           nvcc -h
 
       # Runs a set of commands using the runners shell
