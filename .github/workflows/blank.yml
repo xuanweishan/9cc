@@ -23,15 +23,13 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - uses: Jimver/cuda-toolkit@v0.2.5
-        id: cuda-toolkit
-        with:
-          cuda: '11.5.1'
       # Check out the spec of action host
       - name: Check out the host spec
         run:  |
           lscpu
           lspci | grep VGA
+          which nvcc
+          echo $CUDA_PATH
       - name: Check out library needed installed or not
         run: |
          ls
