@@ -32,7 +32,8 @@ jobs:
           echo $CUDA_PATH
       - name: Check out library needed installed or not
         run: |
-         git clone https://github.com/gamer/project/gamer
+         ls
+         git clone https://github.com/gamer-project/gamer
          ls
 
 
