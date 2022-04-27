@@ -24,21 +24,21 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       # Check out the spec of action host
-      - name: Check out the host spec
+      - name: set up submit script
         run:  |
-          lscpu
-          lspci | grep VGA
-          which nvcc
-          echo $CUDA_PATH
-      - name: Check out library needed installed or not
-        run: |
-         ls
-         git clone https://github.com/gamer-project/gamer
-         ls
-
+          cat '#!/bin/bash' >> submit.job
+          cat '#PBS -N qsub_script_test' >> submit.job
+          cat '#PBS -M xuanweishan@gmail.com' >> submit.job
+          cat '#PBS -m abe' >> submit.job
+          cat '#PBS -q workq' >> submit.job
+          cat '#PBS -k n' >> submit.job
+          cat '#PBS -l walltime=72:00:00' >> submit.job
+          cat '#PBS -l nodes=1:ppn=16' >> submit.job
+          cat 'cd $PBSWORKDIR' >> submit.job
+          cat 'mpirun -map-by ppr:1:socket:pe=4 --report-bindings ./make 1>>log' >> submit.job
 
       # Runs a set of commands using the runners shell
       - name: Run the test
         run: |
           echo 'run test'
-          #make test
+          sh ./submit.job
